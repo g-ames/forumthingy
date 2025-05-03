@@ -1,13 +1,59 @@
-p, h1, h2, h3, h4, h5, h6 {
-    color: white;
+@import url("https://fonts.googleapis.com/css?family=Imprima");
+@font-face {
+    font-family: 'Satoshi';
+    src: url('Satoshi-Variable.ttf') format('truetype');
 }
 
-button, input, b, i {
+* {
+    font-family: "Imprima";
+    scrollbar-color: #000014;
+}
+
+:root {
+    --color-blue-very-light: #e6f0ff;
+    --color-blue-light: #99ccff;
+    --color-blue-sky: #66b2ff;
+    --color-blue: #3399ff;
+    --color-blue-medium: #007bff;
+    --color-blue-dark: #0056b3;
+    --color-blue-darker: #003d80;
+    --color-blue-deep: #001f3f;
+    --color-blue-cyan: #00cfff;
+    --color-blue-indigo: #3f51b5;
+    --color-white: #ffffff;
+    --color-off-white: #f0f8ff;
+    --color-black: #000000;
+}
+
+body {
+    background: linear-gradient(0deg, rgb(0, 0, 0) 0%, rgb(0, 0, 0) 100%);
+    transition: 0.5s;
+    padding: 10px;
+    overflow-x: hidden;
+    scrollbar-color: #000014;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: white;
+    font-weight: bold;
+}
+
+button,
+input,
+b,
+i {
     color: white;
     background-color: black;
 }
 
-.comment i, strong {
+.comment i,
+strong {
     font-size: small;
 }
 
@@ -31,7 +77,8 @@ body {
 
 .list-threads {
     display: flex;
-    flex-direction: column; /* stack items vertically */
+    flex-direction: column;
+    /* stack items vertically */
     justify-content: center;
 }
 
