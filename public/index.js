@@ -12,6 +12,10 @@ function getRelativeTime(utcTimestamp) {
     return date.toLocaleTimeString(undefined, options);
 }
 
+async function JSONFetch(url) {
+    return await (await fetch(url)).json();
+}
+
 var app = {};
 
 app.newLocalName = function() {
@@ -64,10 +68,6 @@ app.go = function (state) {
         app.clear();
         app.container.classList = state;
     }
-}
-
-async function JSONFetch(url) {
-    return await (await fetch(url)).json();
 }
 
 app.getThreadById = async function (id) {
