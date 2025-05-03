@@ -1,0 +1,19 @@
+<html>
+    <style>
+        .comment i, strong {
+            font-size: small;
+        }
+
+        .comment p {
+            margin-top: 0px;
+        }
+    </style>
+    <body>
+        <div class="controller"><button onclick="app.clear();app.getThreads();">Home</button><button onclick="app.clear();app.newPost();">Post</button></div>
+        <div id="thread-main"></div>
+        <div id="thread-footer"></div>
+    </body>
+    <footer>
+        <script src="index.js"></script>
+    </footer>
+</html>
