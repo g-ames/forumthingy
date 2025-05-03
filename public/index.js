@@ -26,7 +26,7 @@ if (app.localName == null) {
     app.newLocalName();
 }
 
-app.container = document.getElementById("thread-main");
+app.thread = document.getElementById("thread-main");
 app.footer = document.getElementById("thread-footer");
 
 app.clear = function () {
@@ -144,14 +144,6 @@ app.getThreads = async function () {
 }
 
 app.comment = function (name, time, message) {
-    app.go("in-thread");
-
-    if (app.container == null || app.container == undefined) {
-        app.container = document.createElement('div');
-        app.container.id = "thread";
-        document.body.appendChild(app.container);
-    }
-
     const commentDiv = document.createElement('div');
     commentDiv.className = 'comment';
 
@@ -175,13 +167,10 @@ app.comment = function (name, time, message) {
 }
 
 app.newPost = function () {
-    app.go("new-post");
 
     app.submit.onclick = async function () {
         let red = `${app.input.value} | OP: ${app.localName}`;
         let res = await JSONFetch(`/threads/new?title=${encodeURIComponent(red)}`);
-        
-        app.go("loading")
 
         setTimeout(async function() {
             app.currentThread = res.id;
@@ -192,11 +181,11 @@ app.newPost = function () {
     }
 }
 
-setInterval(async function () {
-    if (app.currentThread != null) {
-        // Load the contents before you load the thread to prevent screen-flashing
-        let contents = await app.getThreadById(app.currentThread);
-        app.clear();
-        await app.loadThread(app.currentThreadElement, contents);
-    }
-}, 5000);
+// setInterval(async function () {
+//     if (app.currentThread != null) {
+//         // Load the contents before you load the thread to prevent screen-flashing
+//         let contents = await app.getThreadById(app.currentThread);
+//         app.clear();
+//         await app.loadThread(app.currentThreadElement, contents);
+//     }
+// }, 5000);
