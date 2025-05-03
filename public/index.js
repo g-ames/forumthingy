@@ -162,7 +162,7 @@ app.comment = function (name, time, message) {
     commentDiv.appendChild(nameElement);
 
     const timeElement = document.createElement('i');
-    timeElement.textContent = ' | ' + time;
+    timeElement.textContent = ` | ${time}`;
     commentDiv.appendChild(timeElement);
 
     const messageParagraph = document.createElement('p');
@@ -200,5 +200,3 @@ setInterval(async function () {
         await app.loadThread(app.currentThreadElement, contents);
     }
 }, 5000);
-
-app.getThreads();
