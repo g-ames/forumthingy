@@ -14,12 +14,16 @@ function getRelativeTime(utcTimestamp) {
 
 var app = {};
 
+app.newLocalName = function() {
+    app.localName = prompt("Display Name > ");
+    localStorage.setItem("localname", app.localName);
+}
+
 app.currentThread = null;
-app.localName = sessionStorage.getItem("localname");
+app.localName = localStorage.getItem("localname");
 
 if (app.localName == null) {
-    app.localName = prompt("Display Name > ");
-    sessionStorage.setItem("localname", app.localName);
+    app.newLocalName();
 }
 
 app.container = document.getElementById("thread-main");
@@ -38,6 +42,11 @@ app.go = function (state) {
         if (app.input == undefined || app.input == null) {
             app.input = document.createElement(state == "in-thread" ? "input" : "input");
             app.submit = document.createElement("button");
+            
+            app.input.onchange = function() {
+                app.submit.onclick();
+            }
+
             app.footer.appendChild(app.input);
             app.footer.appendChild(app.submit);
         }
@@ -66,6 +75,12 @@ app.getThreadById = async function (id) {
 }
 
 app.loadThread = async function (element, contents) {
+    if(app.lastThreadContents == contents) {
+        return;
+    }
+
+    app.lastThreadContents = contents;
+
     app.comment("Anon-OP", getRelativeTime(element.createdAt), `[CREATED POST] ${element.title}`);
     console.log(contents.comments);
     contents.comments.forEach(comment => {
@@ -98,7 +113,7 @@ app.loadThread = async function (element, contents) {
 app.getThreads = async function () {
     app.go("list-threads");
 
-    sessionStorage.setItem("lastFetchedThreads", +Date.now());
+    localStorage.setItem("lastFetchedThreads", +Date.now());
     var list = await JSONFetch("/threads/all");
 
     list.forEach(async element => {
@@ -163,7 +178,17 @@ app.newPost = function () {
     app.go("new-post");
 
     app.submit.onclick = async function () {
-        await JSONFetch(`/threads/new?title=${encodeURIComponent(app.input.value)}`);
+        let red = `${app.input.value} | OP: ${app.localName}`;
+        let res = await JSONFetch(`/threads/new?title=${encodeURIComponent(red)}`);
+        
+        app.go("loading")
+
+        setTimeout(async function() {
+            app.currentThread = res.id;
+            let dupe = await app.getThreadById(res.id);
+            app.currentThreadElement = dupe;
+            await app.loadThread(dupe, dupe);
+        }, 100);
     }
 }
 
