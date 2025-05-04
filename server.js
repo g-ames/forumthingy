@@ -3,9 +3,14 @@ var db;
     db = await (require("./src/db")());
 })();
 
+const multer = require('multer');
 const express = require('express');
 const app = express();
 const port = 3000;
+
+const upload = multer({ dest: './uploads/' });
+
+app.use('/uploads', express.static('uploads'));
 
 function generateToken() {
     const length = 256;
@@ -16,6 +21,14 @@ function generateToken() {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+function tokenValid(req, res, next) {
+    if (tokens[req.body.username] != req.body.token) {
+        return res.send("INVALID_TOKEN");
+    }
+
+    next();
 }
 
 var tokens = {};
@@ -64,13 +77,7 @@ app.post("/api/users/authenticate", async (req, res) => {
     res.status(200).send(token)
 });
 
-app.post("/api/thread/new", async (req, res) => {
-    console.log(req.body.username, tokens[req.body.username], req.body.token)
-    if (tokens[req.body.username] != req.body.token) {
-        res.send("INVALID_TOKEN");
-        return;
-    }
-
+app.post("/api/thread/new", tokenValid, async (req, res) => {
     let found = await db.User.findOne({
         where: {
             username: req.body.username
@@ -93,12 +100,7 @@ app.post("/api/thread/new", async (req, res) => {
 
 var longPollingCallbacks = {};
 
-app.post("/api/comments/new", async (req, res) => {
-    if (tokens[req.body.username] != req.body.token) {
-        res.send("INVALID_TOKEN");
-        return;
-    }
-
+app.post("/api/comments/new", tokenValid, async (req, res) => {
     let found = await db.User.findOne({
         where: {
             username: req.body.username
@@ -119,6 +121,20 @@ app.post("/api/comments/new", async (req, res) => {
     });
 
     longPollingCallbacks[req.body.thread] = [];
+});
+
+app.post("/api/users/pfp/set", tokenValid, upload.single('image'), async (req, res) => {
+    let found = await db.User.findOne({
+        where: {
+            username: req.body.username
+        }
+    });
+
+    found.set("profilePicture", req.file.filename);
+
+    await user.save(); // sorry user ur gunna have tu wait
+
+    res.send("SUCCESS", req.file.filename);
 });
 
 async function returnThreadInformation(req, res) {

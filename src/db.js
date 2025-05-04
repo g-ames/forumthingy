@@ -15,6 +15,10 @@ module.exports = async function () {
         password: {
             type: DataTypes.STRING(256),
             allowNull: false
+        },
+        profilePicture: {
+            type: DataTypes.TEXT,
+            allowNull: true
         }
     });
 

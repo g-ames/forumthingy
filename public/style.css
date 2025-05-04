@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
@@ -105,10 +106,6 @@ button:hover {
     height: 20%;
 }
 
-#comment-button {
-    transform: translateY(-125%);
-}
-
 #thread-info-container>* {
     display: inline-block;
 }
@@ -129,19 +126,16 @@ button:hover {
 }
 
 .g-comment>div>p {
-    margin: 5;
+    margin-top: 0;
 }
 
 .g-comment>button {
     text-align: center;
-    margin-left: 50%;
-    height: 2%;
-    width: 5%;
 }
 
 .g-comment {
     display: flex;
-    flex-direction: row;
+    gap: 50%;
 }
 
 #newthread {
@@ -195,4 +189,16 @@ button:hover {
 
 .q-comment {
     margin-bottom: 20px;
+}
+
+.comment-here {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    width: 50%;
+    transform: translate(-50%);
+}
+
+#comment-button {
+    transform: translateY(-125%);
 }

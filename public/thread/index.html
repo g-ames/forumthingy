@@ -13,17 +13,21 @@
     </div>
     <h1 class="thread-title" id="thread-title"></h1>
     <p class="extra-info" id="extra-info"></p>
-    <div style="text-align: center; margin-bottom: 10px;">
+    <!-- <div style="text-align: center; margin-bottom: 10px;">
         <button onclick="window.scrollTo(0,99999999999999);">Scroll to bottom</button>
-    </div>
+    </div> -->
     <p class="thread-contents" id="thread-contents"></p>
     <br><hr><br>
+    <div class="comments thread-contents" id="comments"></div>
+    <hr>
     <div class="comment-here">
+        <div>
+            <button onclick="window.scrollTo(0,9999999999);">↓</button>
+            <button onclick="window.scrollTo(0,0);">↑</button>
+        </div>
         <textarea id="comment-textarea" placeholder="Type your comment here!"></textarea>
         <button id="comment-button">Comment</button>
     </div>
-    <div class="comments thread-contents" id="comments"></div>
-    <hr>
     <div class="bottom-div"></div>
 </body>
 <footer>

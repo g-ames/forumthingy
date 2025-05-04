@@ -189,3 +189,19 @@ function createCommentFrag(comments, asQuotes) {
 
     return frag;
 }
+
+api.setPfp = async function(file) {
+    await checkValid();
+
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("username", sessionStorage.getItem("username"));
+    formData.append("token", sessionStorage.getItem("token"));
+
+    const res = await fetch('/api/users/pfp/set', {
+        method: "POST",
+        body: formData // DO NOT set Content-Type
+    });
+
+    return await res.json();
+};
