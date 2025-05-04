@@ -1,12 +1,18 @@
-(async function () {
-    let elements = {
-        title: document.getElementById("thread-title"),
-        info: document.getElementById("extra-info"),
-        contents: document.getElementById("thread-contents"),
-        comments: document.getElementById("comments"),
-        textarea: document.getElementById("comment-textarea"),
-        comment: document.getElementById("comment-button")
-    }
+var elements = {
+    title: document.getElementById("thread-title"),
+    info: document.getElementById("extra-info"),
+    contents: document.getElementById("thread-contents"),
+    comments: document.getElementById("comments"),
+    textarea: document.getElementById("comment-textarea"),
+    comment: document.getElementById("comment-button")
+}
+
+var polling = false;
+async function go() {
+    api.replyCallback = function(x) {
+        elements.textarea.value = "";
+        elements.textarea.placeholder = x.replace(" | ", "");
+    }    
 
     const params = new URLSearchParams(window.location.search);
 
@@ -30,10 +36,14 @@
     }
 
     setInterval(async function () {
-        console.log("Loading thread...");
-        await loadThread();
-        console.log("Loaded!");
-    }, 5000);
+        if(!polling) {
+            polling = true;
+            await loadThread();
+            polling = false;
+        }
+    }, 50);
 
     loadThread();
-})();
+}
+
+go();

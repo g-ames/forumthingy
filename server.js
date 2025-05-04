@@ -91,6 +91,8 @@ app.post("/api/thread/new", async (req, res) => {
     res.send(thread.id);
 });
 
+var longPollingCallbacks = {};
+
 app.post("/api/comments/new", async (req, res) => {
     if (tokens[req.body.username] != req.body.token) {
         res.send("INVALID_TOKEN");
@@ -111,22 +113,15 @@ app.post("/api/comments/new", async (req, res) => {
     });
 
     res.send(comment);
-});
 
-app.get("/api/threads/latest", async (req, res) => {
-    let result = await db.Thread.findAll({
-        limit: 20,
-        order: [['id', 'DESC']], // Order by id descending, thanks that totally makes sense
-        include: [{
-            model: db.User,
-            attributes: { exclude: ['password'] }
-        }]
+    longPollingCallbacks[req.body.thread].forEach(element => {
+        element();
     });
 
-    res.send(result);
+    longPollingCallbacks[req.body.thread] = [];
 });
 
-app.get("/api/thread", async (req, res) => {
+async function returnThreadInformation(req, res) {
     let result = await db.Thread.findByPk(req.query.id, {
         include: [
             {
@@ -148,8 +143,35 @@ app.get("/api/thread", async (req, res) => {
     }
 
     res.send(result);
+}
+
+app.get("/api/thread", async (req, res) => {
+    if(req.query.init == "p") {
+        returnThreadInformation(req, res);
+        return;
+    }
+
+    if(longPollingCallbacks[req.query.id] == null || longPollingCallbacks[req.query.id] == undefined) {
+        longPollingCallbacks[req.query.id] = [];
+    }
+
+    longPollingCallbacks[req.query.id].push(async function() {
+        returnThreadInformation(req, res);
+    });
 });
 
+app.get("/api/threads/latest", async (req, res) => {
+    let result = await db.Thread.findAll({
+        limit: 20,
+        order: [['id', 'DESC']], // Order by id descending, thanks that totally makes sense
+        include: [{
+            model: db.User,
+            attributes: { exclude: ['password'] }
+        }]
+    });
+
+    res.send(result);
+});
 
 app.get("/api/users/about", async (req, res) => {
     try {

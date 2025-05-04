@@ -62,8 +62,11 @@ api.getLatestThreads = async function() {
     return await (await fetch(`/api/threads/latest`)).json();
 }
 
+api.initialGetThread = true;
 api.getThread = async function(id) {
-    return await (await fetch(`/api/thread?id=${id}`)).json();
+    let res = await (await fetch(`/api/thread?id=${id}&init=${api.initialGetThread ? 'p' : 'q'}`)).json();
+    api.initialGetThread = false;
+    return res;
 }
 
 api.tokenValid = async function(username, token) {
@@ -131,6 +134,7 @@ if (sessionStorage.getItem("username") != null) {
     controller.appendChild(aboutMe);
 }
 
+api.replyCallback = async function() {};
 function createCommentFrag(comments, asQuotes) {
     if (asQuotes == undefined) {
         asQuotes = false;
@@ -176,6 +180,7 @@ function createCommentFrag(comments, asQuotes) {
         commentReply.innerText = "⮪";
         commentReply.onclick = function() {
             api.commentItalicizedSuffix = ` | @${element['User'].username} ${element.text.slice(0, 30)} ⮯`;
+            api.replyCallback(api.commentItalicizedSuffix);
         }
         commentDiv.appendChild(commentReply);
 
