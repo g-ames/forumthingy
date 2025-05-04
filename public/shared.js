@@ -24,7 +24,7 @@ function localDT(createdAt) {
 
 var api = {};
 
-api.newUser = async function (username, password) {
+api.newUser = async function(username, password) {
     return await (await fetch(`/api/users/new`, {
         method: "POST",
         headers: {
@@ -34,7 +34,7 @@ api.newUser = async function (username, password) {
     })).text();
 }
 
-api.newThread = async function (title, content) {
+api.newThread = async function(title, content) {
     return await (await fetch(`/api/thread/new`, {
         method: "POST",
         headers: {
@@ -44,7 +44,7 @@ api.newThread = async function (title, content) {
     })).text();
 }
 
-api.authenticate = async function (username, password) {
+api.authenticate = async function(username, password) {
     return await (await fetch(`/api/users/authenticate`, {
         method: "POST",
         headers: {
@@ -54,19 +54,19 @@ api.authenticate = async function (username, password) {
     })).text();
 }
 
-api.about = async function (username) {
+api.about = async function(username) {
     return await (await fetch(`/api/users/about?username=${username}`)).json();
 }
 
-api.getLatestThreads = async function () {
+api.getLatestThreads = async function() {
     return await (await fetch(`/api/threads/latest`)).json();
 }
 
-api.getThread = async function (id) {
+api.getThread = async function(id) {
     return await (await fetch(`/api/thread?id=${id}`)).json();
 }
 
-api.tokenValid = async function (username, token) {
+api.tokenValid = async function(username, token) {
     return await (await fetch(`/api/token/valid`, {
         method: "POST",
         headers: {
@@ -76,10 +76,10 @@ api.tokenValid = async function (username, token) {
     })).text();
 }
 
-api.commentItalicizedSuffix = ""; 
-api.newComment = async function (text, thread) {
+api.commentItalicizedSuffix = "";
+api.newComment = async function(text, thread) {
     italicized = api.commentItalicizedSuffix;
-    if(italicized == undefined) {
+    if (italicized == undefined) {
         italicized = "";
     }
     await checkValid();
@@ -88,10 +88,10 @@ api.newComment = async function (text, thread) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 
-            username: sessionStorage.getItem("username"), 
+        body: JSON.stringify({
+            username: sessionStorage.getItem("username"),
             token: sessionStorage.getItem("token"),
-            text, 
+            text,
             thread,
             italicized
         })
@@ -124,7 +124,7 @@ async function checkValid() {
 }
 
 let controller = document.getElementById("controller");
-if(sessionStorage.getItem("username") != null) {
+if (sessionStorage.getItem("username") != null) {
     let aboutMe = document.createElement("a");
     aboutMe.href = `/user?username=${sessionStorage.getItem("username")}`
     aboutMe.innerText = "About Me";
@@ -132,7 +132,7 @@ if(sessionStorage.getItem("username") != null) {
 }
 
 function createCommentFrag(comments, asQuotes) {
-    if(asQuotes == undefined) {
+    if (asQuotes == undefined) {
         asQuotes = false;
     }
 
@@ -144,13 +144,13 @@ function createCommentFrag(comments, asQuotes) {
 
         let commentInfo = document.createElement("i");
 
-        if(!asQuotes) {
+        if (!asQuotes) {
             commentInfo.innerText = `${element['User'].username} | ${localDT(element['createdAt'])} ${element.italicizedConcatinatedText}`;
         } else {
             commentInfo.innerText = ` - ${element['User'].username}`;
         }
 
-        if(asQuotes) {
+        if (asQuotes) {
             let commentText = document.createElement("a");
             commentText.innerText = element.text;
             commentDiv.classList = "g-comment q-comment";
@@ -171,10 +171,11 @@ function createCommentFrag(comments, asQuotes) {
             commentDiv.appendChild(innerCommentDiv);
         }
 
+
         let commentReply = document.createElement("button");
         commentReply.innerText = "⮪";
         commentReply.onclick = function() {
-            api.commentItalicizedSuffix = ` | @${element['User'].username} ${element.text.slice(0, 30)} ⮯`; 
+            api.commentItalicizedSuffix = ` | @${element['User'].username} ${element.text.slice(0, 30)} ⮯`;
         }
         commentDiv.appendChild(commentReply);
 

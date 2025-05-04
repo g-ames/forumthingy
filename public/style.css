@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
 body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
@@ -130,15 +129,19 @@ button:hover {
 }
 
 .g-comment>div>p {
-    margin-top: 0;
+    margin: 5;
 }
 
 .g-comment>button {
     text-align: center;
+    margin-left: 50%;
+    height: 2%;
+    width: 5%;
 }
 
 .g-comment {
     display: flex;
+    flex-direction: row;
 }
 
 #newthread {
