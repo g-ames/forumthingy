@@ -33,7 +33,7 @@ app.post("/api/users/new", async (req, res) => {
         });
 
         tokens[req.username] = generateToken();
-        res.status(201).send(tokens[req.username]);
+        res.send(tokens[req.body.username]);
     } catch (e) {
         var errors = JSON.stringify(e);
         if (errors.includes("username must be unique")) {
