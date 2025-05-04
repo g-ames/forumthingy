@@ -121,12 +121,24 @@ button:hover {
     margin-bottom: 1%;
 }
 
-.g-comment>i {
+.g-comment>div {
+    width: 50%;
+}
+
+.g-comment>div>i {
     font-size: small;
 }
 
-.g-comment>p {
+.g-comment>div>p {
     margin-top: 0;
+}
+
+.g-comment>button {
+    text-align: center;
+}
+
+.g-comment {
+    display: flex;
 }
 
 #newthread {

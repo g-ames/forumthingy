@@ -164,9 +164,11 @@ function createCommentFrag(comments, asQuotes) {
             commentDiv.appendChild(commentInfo);
         } else {
             let commentText = document.createElement("p");
+            let innerCommentDiv = document.createElement("div");
             commentText.innerText = element.text;
-            commentDiv.appendChild(commentInfo);
-            commentDiv.appendChild(commentText);
+            innerCommentDiv.appendChild(commentInfo);
+            innerCommentDiv.appendChild(commentText);
+            commentDiv.appendChild(innerCommentDiv);
         }
 
         let commentReply = document.createElement("button");

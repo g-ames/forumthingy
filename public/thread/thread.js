@@ -33,7 +33,7 @@
         console.log("Loading thread...");
         await loadThread();
         console.log("Loaded!");
-    }, 100);
+    }, 5000);
 
     loadThread();
 })();
