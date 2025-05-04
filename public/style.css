@@ -2,11 +2,20 @@ body {
     background-color: black;
 }
 
-p, h1, h2, h3, h4, h5, h6, button, input {
+p, h1, h2, h3, h4, h5, h6, button, input, a, textarea {
     color: white;
     background-color: black;
 }
 
+textarea {
+    width: 100%;
+    height: 50%;
+}
+
 .user-info-container {
+    display: block;
+}
+
+.threads-list a {
     display: block;
 }

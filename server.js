@@ -8,7 +8,7 @@ const app = express();
 const port = 3000;
 
 function generateToken() {
-    const length = 256; 
+    const length = 256;
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
@@ -31,34 +31,113 @@ app.post("/api/users/new", async (req, res) => {
             username: req.body.username,
             password: req.body.password
         });
-    
+
         tokens[req.username] = generateToken();
         res.status(201).send(tokens[req.username]);
-    } catch(e) {
-        res.status(400).send(e.errors[0].message);
+    } catch (e) {
+        var errors = JSON.stringify(e);
+        if (errors.includes("username must be unique")) {
+            res.send("USERNAME_EXISTS");
+        }
     }
 });
 
 app.post("/api/users/authenticate", async (req, res) => {
     let found = await db.User.findOne({
-        where: { 
-            username: req.body.username, 
-            password: req.body.password 
-        } 
+        where: {
+            username: req.body.username,
+            password: req.body.password
+        }
     });
-    
-    if(found == null) {
+
+    if (found == null) {
         res.status(400).send(null);
         return;
     }
 
     let token = tokens[req.body.username];
-    if(token == undefined || token == null) {
+    if (token == undefined || token == null) {
         token = generateToken();
         tokens[req.body.username] = token;
     }
 
     res.status(200).send(token)
+});
+
+app.get("/api/users/about", async (req, res) => {
+    let found = await db.User.findOne({
+        where: {
+            username: req.query.username
+        }
+    });
+
+    if (found == null) {
+        res.status(400).send(null);
+        return;
+    }
+
+    res.send({
+        createdAt: found.createdAt
+    });
+});
+
+app.post("/api/thread/new", async (req, res) => {
+    console.log(req.body.username, tokens[req.body.username], req.body.token)
+    if (tokens[req.body.username] != req.body.token) {
+        res.send("INVALID_TOKEN");
+        return;
+    }
+
+    let found = await db.User.findOne({
+        where: {
+            username: req.body.username
+        }
+    });
+
+    if (found == null) {
+        res.status(400).send(null);
+        return;
+    }
+
+    const thread = await db.Thread.create({
+        name: req.body.title,
+        description: req.body.content,
+        UserId: found.id
+    });
+
+    res.send(thread.id);
+});
+
+app.get("/api/threads/latest", async (req, res) => {
+    let result = await db.Thread.findAll({
+        limit: 20,
+        order: [['id', 'DESC']], // Order by id descending, thanks that totally makes sense
+        include: [{
+            model: db.User,
+            attributes: { exclude: ['password'] }
+        }]
+    });
+
+    res.send(result);
+});
+
+app.get("/api/thread", async (req, res) => {
+    let result = await db.Thread.findByPk(req.query.id, {
+        include: [{
+            model: db.User,
+            attributes: { exclude: ['password'] }
+        }]
+    });
+
+    if (result == null || result == undefined) {
+        return res.status(404).send({ error: "Thread not found" });
+    }
+
+    res.send(result);
+});
+
+app.post("/api/token/valid", async (req, res) => {
+    res.send(tokens[req.body.username] == req.body.token);
 });
 
 app.listen(port, () => {

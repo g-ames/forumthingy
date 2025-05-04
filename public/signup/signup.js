@@ -10,7 +10,13 @@ elements.signup.onclick = async function() {
         elements.password.value
     );
 
+    if(result == "USERNAME_EXISTS") {
+        alert(`Sorry, '${elements.username.value}' already exists!`);
+        return;
+    }
+
     sessionStorage.setItem("token", result);
     sessionStorage.setItem("username", elements.username.value);
+
     window.location.href = "/";
 }
