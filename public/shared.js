@@ -172,7 +172,7 @@ function createCommentFrag(comments, asQuotes) {
         let commentReply = document.createElement("button");
         commentReply.innerText = "⮪";
         commentReply.onclick = function() {
-            api.commentItalicizedSuffix = `@${element['User'].username} ${element.text.slice(0, 10)} ⮯`; 
+            api.commentItalicizedSuffix = ` | @${element['User'].username} ${element.text.slice(0, 30)} ⮯`; 
         }
         commentDiv.appendChild(commentReply);
 
