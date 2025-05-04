@@ -65,6 +65,22 @@ api.tokenValid = async function (username, token) {
     })).text();
 }
 
+api.newComment = async function (text, thread) {
+    await checkValid();
+    return await (await fetch(`/api/comments/new`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            username: sessionStorage.getItem("username"), 
+            token: sessionStorage.getItem("token"),
+            text, 
+            thread
+        })
+    })).text();
+}
+
 async function checkValid() {
     let cusername = sessionStorage.getItem("username");
     let ctoken = sessionStorage.getItem("token");
@@ -78,16 +94,14 @@ async function checkValid() {
             });
             return;
         }
-        
+
         window.location.href = "/signup";
         return;
     }
 
     let valid = await api.tokenValid(cusername, ctoken);
 
-    if (!valid) {
+    if (valid == false || JSON.parse(valid) == false) {
         window.location.href = "/signin";
     }
 }
-
-checkValid();

@@ -1,21 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 body {
-    background-color: black;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
 }
 
-p, h1, h2, h3, h4, h5, h6, button, input, a, textarea {
-    color: white;
-    background-color: black;
-}
-
-textarea {
+#content {
     width: 100%;
-    height: 50%;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .user-info-container {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .threads-list a {
     display: block;
+    padding: 10px 15px;
+    margin: 8px 0;
+    background-color: #ffffff;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #0077cc;
+    transition: background-color 0.2s ease;
+}
+
+.threads-list a:hover {
+    background-color: #e6f2ff;
+}
+
+button {
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #005fa3;
+}
+
+#comment-textarea {
+    resize: none;
+    width: 100%;
+    max-width: 600px;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.comment-here,
+.thread-title,
+.extra-info,
+#friendly {
+    text-align: center;
+}
+
+.thread-contents {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.controller {
+    display: flex;
+    justify-content: center;
+    gap: 5%;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+#threads-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.bottom-div {
+    height: 20%;
 }

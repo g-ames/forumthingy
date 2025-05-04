@@ -1,15 +1,16 @@
-(function() {
+var elements = {
+    title: document.getElementById("title"),
+    content: document.getElementById("content"),
+    newthread: document.getElementById("newthread"),
+    preview: document.getElementById("preview")
+}
+
+function ready() {
     if(sessionStorage.getItem("username") == null) {
         window.location.href = "/signin";
         return;
     }
 
-    let elements = {
-        title: document.getElementById("title"),
-        content: document.getElementById("content"),
-        newthread: document.getElementById("newthread")
-    }
-    
     elements.newthread.onclick = async function() {
         console.log(elements.content.value);
 
@@ -21,4 +22,6 @@
             window.location.href = `/thread?id=${response}`
         }
     }
-})();
+}
+
+ready();

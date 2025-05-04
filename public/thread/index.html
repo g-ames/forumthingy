@@ -1,21 +1,34 @@
 <html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="/style.css">
-    </head>
-    <body>
-        <div>
-            <a href="/">Home</a>
-            <a href="/signup">Sign Up</a>
-            <a href="/signin">Sign In</a>
-            <a href="/newthread">New Thread</a>
-        </div>
-        <h1 class="thread-title" id="thread-title"></h1>
-        <p class="extra-info" id="extra-info"></p>
-        <p class="thread-contents" id="thread-contents"></p>
-        <div class="comments" id="comments"></div>
-    </body>
-    <footer>
-        <script src="/shared.js"></script>
-        <script src="/thread/thread.js"></script>
-    </footer>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+
+<body>
+    <div class="controller">
+        <a href="/">Home</a>
+        <a href="/signup">Sign Up</a>
+        <a href="/signin">Sign In</a>
+        <a href="/newthread">New Thread</a>
+    </div>
+    <h1 class="thread-title" id="thread-title"></h1>
+    <p class="extra-info" id="extra-info"></p>
+    <div style="text-align: center; margin-bottom: 10px;">
+        <button onclick="window.scrollTo(0,99999999999999);">Scroll to bottom</button>
+    </div>
+    <p class="thread-contents" id="thread-contents"></p>
+    <hr>
+    <div class="comment-here">
+        <textarea id="comment-textarea" placeholder="Type your comment here!"></textarea>
+        <button id="comment-button">Comment</button>
+    </div>
+    <div class="comments thread-contents" id="comments"></div>
+    <hr>
+    <div class="bottom-div"></div>
+</body>
+<footer>
+    <script src="/shared.js"></script>
+    <script src="/thread/thread.js"></script>
+</footer>
+
 </html>

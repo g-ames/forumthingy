@@ -1,23 +1,28 @@
 <html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="/style.css">
-    </head>
-    <body>
-        <div>
-            <a href="/">Home</a>
-            <a href="/signup">Sign Up</a>
-            <a href="/signin">Sign In</a>
-            <a href="/newthread">New Thread</a>
-        </div>
-        <div id="thread-info-container">
-            <h1>Create a New Thread</h1>
-            <input id="title"></input><br>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+
+<body>
+    <div class="controller">
+        <a href="/">Home</a>
+        <a href="/signup">Sign Up</a>
+        <a href="/signin">Sign In</a>
+        <a href="/newthread">New Thread</a>
+    </div>
+    <div id="thread-info-container">
+        <h1>Create a New Thread</h1>
+        <input id="title"></input><br>
+        <div style="display: flex; height: 80%;">
             <textarea id="content"></textarea>
-            <button id="newthread">Create Thread</button>
         </div>
-    </body>
-    <footer>
-        <script src="/shared.js"></script>
-        <script src="/newthread/newthread.js"></script>
-    </footer>
+        <button id="newthread">Create Thread</button>
+    </div>
+</body>
+<footer>
+    <script src="/shared.js"></script>
+    <script src="/newthread/newthread.js"></script>
+</footer>
+
 </html>

@@ -108,6 +108,27 @@ app.post("/api/thread/new", async (req, res) => {
     res.send(thread.id);
 });
 
+app.post("/api/comments/new", async (req, res) => {
+    if(tokens[req.body.username] != req.body.token) {
+        res.send("INVALID_TOKEN");
+        return;
+    }
+
+    let found = await db.User.findOne({
+        where: {
+            username: req.body.username
+        }
+    });
+
+    const comment = await db.Comment.create({
+        ThreadId: req.body.thread,
+        UserId: found.id,
+        text: req.body.text
+    });
+
+    res.send(comment);
+});
+
 app.get("/api/threads/latest", async (req, res) => {
     let result = await db.Thread.findAll({
         limit: 20,
@@ -123,12 +144,21 @@ app.get("/api/threads/latest", async (req, res) => {
 
 app.get("/api/thread", async (req, res) => {
     let result = await db.Thread.findByPk(req.query.id, {
-        include: [{
-            model: db.User,
-            attributes: { exclude: ['password'] }
-        }]
+        include: [
+            {
+                model: db.User,
+                attributes: { exclude: ['password'] }
+            },
+            {
+                model: db.Comment,
+                include: [{
+                    model: db.User,
+                    attributes: { exclude: ['password'] }
+                }]
+            }
+        ]
     });
-
+    
     if (result == null || result == undefined) {
         return res.status(404).send({ error: "Thread not found" });
     }
