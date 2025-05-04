@@ -33,6 +33,10 @@ module.exports = async function () {
         text: {
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        italicizedConcatinatedText: {
+            type: DataTypes.TEXT,
+            allowNull: false    
         }
     });
 

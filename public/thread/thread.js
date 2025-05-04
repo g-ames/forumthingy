@@ -26,6 +26,7 @@
     elements.comment.onclick = async function () {
         let response = await api.newComment(elements.textarea.value, parseInt(params.get("id")));
         elements.textarea.value = "";
+        api.commentItalicizedSuffix = "";
     }
 
     setInterval(async function () {

@@ -106,7 +106,8 @@ app.post("/api/comments/new", async (req, res) => {
     const comment = await db.Comment.create({
         ThreadId: req.body.thread,
         UserId: found.id,
-        text: req.body.text
+        text: req.body.text,
+        italicizedConcatinatedText: req.body.italicized
     });
 
     res.send(comment);

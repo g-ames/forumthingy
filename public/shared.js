@@ -76,7 +76,12 @@ api.tokenValid = async function (username, token) {
     })).text();
 }
 
+api.commentItalicizedSuffix = ""; 
 api.newComment = async function (text, thread) {
+    italicized = api.commentItalicizedSuffix;
+    if(italicized == undefined) {
+        italicized = "";
+    }
     await checkValid();
     return await (await fetch(`/api/comments/new`, {
         method: "POST",
@@ -87,7 +92,8 @@ api.newComment = async function (text, thread) {
             username: sessionStorage.getItem("username"), 
             token: sessionStorage.getItem("token"),
             text, 
-            thread
+            thread,
+            italicized
         })
     })).text();
 }
@@ -139,7 +145,7 @@ function createCommentFrag(comments, asQuotes) {
         let commentInfo = document.createElement("i");
 
         if(!asQuotes) {
-            commentInfo.innerText = `${element['User'].username} | ${localDT(element['createdAt'])}`;
+            commentInfo.innerText = `${element['User'].username} | ${localDT(element['createdAt'])} ${element.italicizedConcatinatedText}`;
         } else {
             commentInfo.innerText = ` - ${element['User'].username}`;
         }
@@ -162,6 +168,13 @@ function createCommentFrag(comments, asQuotes) {
             commentDiv.appendChild(commentInfo);
             commentDiv.appendChild(commentText);
         }
+
+        let commentReply = document.createElement("button");
+        commentReply.innerText = "⮪";
+        commentReply.onclick = function() {
+            api.commentItalicizedSuffix = `@${element['User'].username} ${element.text.slice(0, 10)} ⮯`; 
+        }
+        commentDiv.appendChild(commentReply);
 
         frag.appendChild(commentDiv);
     });
