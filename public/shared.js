@@ -9,7 +9,17 @@ const today = new Date();
 const thisDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
 
 function localDT(createdAt) {
-    return ((new Date(createdAt)).toLocaleString()).replace(thisDate, "Today");
+    const date = new Date(createdAt);
+    const options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+    };
+    const thisDate = new Date().toLocaleDateString();
+    const formatted = date.toLocaleString(undefined, options);
+    return formatted.replace(thisDate, "Today");
 }
 
 var api = {};
