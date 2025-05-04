@@ -33,7 +33,9 @@ async function go() {
         let response = await api.newComment(elements.textarea.value, parseInt(params.get("id")));
         elements.textarea.value = "";
         api.commentItalicizedSuffix = "";
-        window.scrollTo(0,99999999999999);
+        setTimeout(function() {
+            window.scrollTo(0, 99999999999999);
+        }, 100);
     }
 
     setInterval(async function () {
