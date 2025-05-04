@@ -5,8 +5,11 @@ async function sha256(message) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+const today = new Date();
+const thisDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+
 function localDT(createdAt) {
-    return (new Date(createdAt)).toLocaleString();
+    return ((new Date(createdAt)).toLocaleString()).replace(thisDate, "Today");
 }
 
 var api = {};
@@ -42,9 +45,7 @@ api.authenticate = async function (username, password) {
 }
 
 api.about = async function (username) {
-    let intermediate = await (await fetch(`/api/users/about?username=${username}`)).json();
-    intermediate.createdAt = localDT(intermediate.createdAt);
-    return intermediate;
+    return await (await fetch(`/api/users/about?username=${username}`)).json();
 }
 
 api.getLatestThreads = async function () {
@@ -104,4 +105,56 @@ async function checkValid() {
     if (valid == false || JSON.parse(valid) == false) {
         window.location.href = "/signin";
     }
+}
+
+let controller = document.getElementById("controller");
+if(sessionStorage.getItem("username") != null) {
+    let aboutMe = document.createElement("a");
+    aboutMe.href = `/user?username=${sessionStorage.getItem("username")}`
+    aboutMe.innerText = "About Me";
+    controller.appendChild(aboutMe);
+}
+
+function createCommentFrag(comments, asQuotes) {
+    if(asQuotes == undefined) {
+        asQuotes = false;
+    }
+
+    let frag = new DocumentFragment();
+
+    comments.forEach(element => {
+        let commentDiv = document.createElement("div");
+        commentDiv.classList = "g-comment";
+
+        let commentInfo = document.createElement("i");
+
+        if(!asQuotes) {
+            commentInfo.innerText = `${element['User'].username} | ${localDT(element['createdAt'])}`;
+        } else {
+            commentInfo.innerText = ` - ${element['User'].username}`;
+        }
+
+        if(asQuotes) {
+            let commentText = document.createElement("a");
+            commentText.innerText = element.text;
+            commentDiv.classList = "g-comment q-comment";
+            let quoteContainer = document.createElement("span");
+            let bigQuoteSymbol = document.createElement("h1");
+            bigQuoteSymbol.innerText = "“";
+            commentText.href = `/thread?id=${element["Thread"].id}`;
+            quoteContainer.appendChild(bigQuoteSymbol);
+            quoteContainer.appendChild(commentText);
+            commentDiv.appendChild(quoteContainer);
+            commentDiv.appendChild(commentInfo);
+        } else {
+            let commentText = document.createElement("p");
+            commentText.innerText = element.text;
+            commentDiv.appendChild(commentInfo);
+            commentDiv.appendChild(commentText);
+        }
+
+        frag.appendChild(commentDiv);
+    });
+
+    return frag;
 }

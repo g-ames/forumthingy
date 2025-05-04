@@ -5,19 +5,19 @@
 </head>
 
 <body>
-    <div class="controller">
+    <div class="controller" id="controller">
         <a href="/">Home</a>
         <a href="/signup">Sign Up</a>
         <a href="/signin">Sign In</a>
         <a href="/newthread">New Thread</a>
     </div>
-    <h1>Sign Up</h1>
     <div class="user-info-container">
-        <input type="text" id="username"></input>
-        <input type="password" id="password"></input>
+        <h1>Sign Up</h1>
+        <input type="text" id="username"  autocomplete="username"></input>
+        <input type="password" id="password" autocomplete="new-password"></input>
         <button id="signup">Sign Up</button>
+        <br><a href="/signin">Already have an account? Sign in!</a>
     </div>
-    <br><a href="/signin">Already have an account? Sign in!</a>
 </body>
 <footer>
     <script src="/shared.js"></script>

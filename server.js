@@ -64,23 +64,6 @@ app.post("/api/users/authenticate", async (req, res) => {
     res.status(200).send(token)
 });
 
-app.get("/api/users/about", async (req, res) => {
-    let found = await db.User.findOne({
-        where: {
-            username: req.query.username
-        }
-    });
-
-    if (found == null) {
-        res.status(400).send(null);
-        return;
-    }
-
-    res.send({
-        createdAt: found.createdAt
-    });
-});
-
 app.post("/api/thread/new", async (req, res) => {
     console.log(req.body.username, tokens[req.body.username], req.body.token)
     if (tokens[req.body.username] != req.body.token) {
@@ -109,7 +92,7 @@ app.post("/api/thread/new", async (req, res) => {
 });
 
 app.post("/api/comments/new", async (req, res) => {
-    if(tokens[req.body.username] != req.body.token) {
+    if (tokens[req.body.username] != req.body.token) {
         res.send("INVALID_TOKEN");
         return;
     }
@@ -158,12 +141,49 @@ app.get("/api/thread", async (req, res) => {
             }
         ]
     });
-    
+
     if (result == null || result == undefined) {
         return res.status(404).send({ error: "Thread not found" });
     }
 
     res.send(result);
+});
+
+
+app.get("/api/users/about", async (req, res) => {
+    try {
+        let username = req.query.username;
+
+        const user = await db.User.findOne({
+            where: { username },
+            attributes: { exclude: ['password'] },  // Exclude the user's password
+            include: [
+                {
+                    model: db.Thread,
+                    attributes: ['id', 'name', 'description'],  // Fields to retrieve for threads
+                },
+                {
+                    model: db.Comment,
+                    attributes: ['id', 'text'],  // Fields to retrieve for comments
+                    include: [
+                        {
+                            model: db.Thread,
+                            attributes: ['id', 'name', 'description'],  // Include thread info in comments
+                        }
+                    ]
+                }
+            ]
+        });
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        res.send(user);
+    } catch (error) {
+        console.error('Error fetching user threads and comments:', error);
+        res.status(500).send("Internal server error... Sorry! :(");
+    }
 });
 
 app.post("/api/token/valid", async (req, res) => {

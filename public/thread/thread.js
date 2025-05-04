@@ -1,4 +1,4 @@
-(async function() {
+(async function () {
     let elements = {
         title: document.getElementById("thread-title"),
         info: document.getElementById("extra-info"),
@@ -17,33 +17,18 @@
         elements.contents.innerText = thread.description;
         elements.info.innerText = `Created: ${localDT(thread.createdAt)}, Last updated: ${localDT(thread.updatedAt)}, created by ${thread.User.username}`;
 
-        let frag = new DocumentFragment();
-        
-        thread["Comments"].forEach(element => {
-            let commentDiv = document.createElement("div");
-            commentDiv.classList = "g-comment";
-
-            let commentInfo = document.createElement("i");
-            commentInfo.innerText = `${element['User'].username} | ${element['createdAt']}`;
-
-            let commentText = document.createElement("p");
-            commentText.innerText = element.text;
-
-            commentDiv.appendChild(commentInfo);
-            commentDiv.appendChild(commentText);
-            frag.appendChild(commentDiv);
-        });
+        let frag = createCommentFrag(thread["Comments"]);
 
         elements.comments.innerHTML = "";
         elements.comments.append(frag);
     }
 
-    elements.comment.onclick = async function() {
+    elements.comment.onclick = async function () {
         let response = await api.newComment(elements.textarea.value, parseInt(params.get("id")));
         elements.textarea.value = "";
     }
-    
-    setInterval(async function() {
+
+    setInterval(async function () {
         console.log("Loading thread...");
         await loadThread();
         console.log("Loaded!");

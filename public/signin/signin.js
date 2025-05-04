@@ -10,6 +10,11 @@ elements.signin.onclick = async function() {
         elements.password.value
     );
 
+    if(result == "") {
+        alert(`${elements.username.value} does not exist!`);
+        return;
+    }
+
     sessionStorage.setItem("token", result);
     sessionStorage.setItem("username", elements.username.value);
     window.location.href = "/";

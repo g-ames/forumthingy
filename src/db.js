@@ -37,6 +37,7 @@ module.exports = async function () {
     });
 
     User.hasMany(Thread);
+    User.hasMany(Comment);
     Thread.belongsTo(User);
 
     Thread.hasMany(Comment);
