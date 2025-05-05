@@ -110,11 +110,35 @@ button:hover {
     display: inline-block;
 }
 
-.g-comment {
+.g-comment{
+    /* display: flex;
+    gap: 50%;
+    height: min-content; */
+    display: inline-block;
+    width: 100%;
     padding: 5px;
     background-color: #dfdfdf;
     border-radius: 10px;
     margin-bottom: 1%;
+}
+
+.g-comment {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    background-color: #dfdfdf;
+    border-radius: 10px;
+    margin-bottom: 1%;
+}
+
+.g-comment > .content {
+    flex: 1;
+}
+
+.g-comment button {
+    align-self: flex-start;
 }
 
 .g-comment>div {
@@ -131,11 +155,7 @@ button:hover {
 
 .g-comment>button {
     text-align: center;
-}
-
-.g-comment {
-    display: flex;
-    gap: 50%;
+    max-width: min-content;
 }
 
 #newthread {
