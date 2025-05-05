@@ -202,3 +202,46 @@ button:hover {
 #comment-button {
     transform: translateY(-125%);
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+    }
+
+    .user-info-container,
+    .threads-list a,
+    .g-comment,
+    #comment-textarea,
+    #title,
+    #content {
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+        border: 1px solid #444;
+    }
+
+    .threads-list a:hover {
+        background-color: #334455;
+    }
+
+    button {
+        background-color: #3399ff;
+        color: #fff;
+    }
+
+    button:hover {
+        background-color: #267acc;
+    }
+
+    .g-comment {
+        background-color: #3a3a3a;
+    }
+
+    /* .comment-here {
+        background-color: #2a2a2a;
+    } */
+
+    #thread-info-container {
+        color: #e0e0e0;
+    }
+}
