@@ -6,6 +6,7 @@ body {
     padding: 0;
     background-color: #f9f9f9;
     color: #333;
+    word-break: break-word;
 }
 
 button {
@@ -115,7 +116,6 @@ button:hover {
     gap: 50%;
     height: min-content; */
     display: inline-block;
-    width: 100%;
     padding: 5px;
     background-color: #dfdfdf;
     border-radius: 10px;
@@ -131,6 +131,10 @@ button:hover {
     background-color: #dfdfdf;
     border-radius: 10px;
     margin-bottom: 1%;
+}
+
+.g-comment > div > p {
+    width: calc(100% * 1.80) !important;
 }
 
 .g-comment > .content {
