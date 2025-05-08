@@ -8,6 +8,8 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+require('./src/makemini')(app);
+
 const upload = multer({ dest: './uploads/' });
 
 app.use('/uploads', express.static('uploads'));
@@ -101,6 +103,11 @@ app.post("/api/thread/new", tokenValid, async (req, res) => {
 var longPollingCallbacks = {};
 
 app.post("/api/comments/new", tokenValid, async (req, res) => {
+    if(req.body.text.trim() == "") {
+        res.status(500).send();
+        return;
+    }
+
     let found = await db.User.findOne({
         where: {
             username: req.body.username
@@ -229,6 +236,8 @@ app.post("/api/token/valid", async (req, res) => {
     res.send(tokens[req.body.username] == req.body.token);
 });
 
-app.listen(port, () => {
-    console.log("goose!")
+const hostname = "50.106.73.183";
+
+app.listen(port, hostname, () => {
+    console.log(hostname)
 });

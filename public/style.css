@@ -1,4 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@font-face {
+    font-family: 'Roboto';
+    src: url('/Roboto/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900; /* variable range */
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Roboto';
+    src: url('/Roboto/Roboto-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
+  }  
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -111,7 +125,7 @@ button:hover {
     display: inline-block;
 }
 
-.g-comment{
+.g-comment {
     /* display: flex;
     gap: 50%;
     height: min-content; */
@@ -133,11 +147,11 @@ button:hover {
     margin-bottom: 1%;
 }
 
-.g-comment > div > p {
-    width: calc(100% * 1.80) !important;
+.g-comment>div>p {
+    width: calc(100% * 1.809) !important;
 }
 
-.g-comment > .content {
+.g-comment>.content {
     flex: 1;
 }
 
@@ -267,5 +281,15 @@ button:hover {
 
     #thread-info-container {
         color: #e0e0e0;
+    }
+
+    a {
+        color: white;
+        background-color: transparent;
+        text-decoration: black wavy underline;
+    }
+
+    a:visited {
+        color: rgb(9, 162, 233);
     }
 }

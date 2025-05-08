@@ -1,8 +1,10 @@
 {
   "dependencies": {
+    "clean-css": "^5.3.3",
     "express": "^5.1.0",
     "multer": "^1.4.5-lts.2",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "terser": "^5.39.0"
   }
 }

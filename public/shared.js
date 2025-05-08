@@ -1,4 +1,28 @@
+const HTTPHASHES = window.crypto.subtle === undefined;
+let hashesReady = Promise.resolve();
+
+if (HTTPHASHES) {
+    console.warn("WARNING: HTTP env: including httphashes.js! Please run under HTTPS under prod env!");
+    
+    hashesReady = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "/httphashes.js";
+        script.onload = () => {
+            console.info("httphashes.js loaded!");
+            resolve();
+        };
+        script.onerror = () => reject(new Error("Failed to load httphashes.js"));
+        document.body.appendChild(script);
+    });
+}
+
 async function sha256(message) {
+    // HTTP fallback
+    if (HTTPHASHES) {
+        await hashesReady;
+        return (new Hashes.SHA256()).hex(message);
+    }
+
     const msgBuffer = new TextEncoder().encode(message);
     const hashBuffer = await window.crypto.subtle.digest('SHA-256', msgBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
