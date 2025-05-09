@@ -8,12 +8,14 @@ if(username != null) {
 }
 
 (async function() {
+    let fragment = new DocumentFragment();
     let threadsList = document.getElementById("threads-list");
     let theLatest = await api.getLatestThreads();
     theLatest.forEach(element => {
         let anchor = document.createElement("a");
         anchor.href = `/thread?id=${element.id}`;
         anchor.innerText = `${element.name} | ${element.User.username} | ${localDT(element.createdAt)}`
-        threadsList.appendChild(anchor);
+        fragment.appendChild(anchor);
     });
+    threadsList.appendChild(fragment);
 })();

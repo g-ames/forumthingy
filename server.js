@@ -6,6 +6,14 @@ var db;
 const multer = require('multer');
 const express = require('express');
 const app = express();
+
+const compression = require('compression');
+
+app.use(compression({
+    level: 9,
+    threshold: 1024
+}));
+
 const port = 3000;
 
 require('./src/makemini')(app);
@@ -139,7 +147,7 @@ app.post("/api/users/pfp/set", tokenValid, upload.single('image'), async (req, r
 
     found.set("profilePicture", req.file.filename);
 
-    await user.save(); // sorry user ur gunna have tu wait
+    await found.save(); // sorry user ur gunna have tu wait
 
     res.send("SUCCESS", req.file.filename);
 });

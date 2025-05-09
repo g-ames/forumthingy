@@ -86,9 +86,9 @@ api.getLatestThreads = async function() {
     return await (await fetch(`/api/threads/latest`)).json();
 }
 
-api.initialGetThread = true;
+api.getInitialThread = true;
 api.getThread = async function(id) {
-    let res = await (await fetch(`/api/thread?id=${id}&init=${api.initialGetThread ? 'p' : 'q'}`)).json();
+    let res = await (await fetch(`/api/thread?id=${id}&init=${api.getInitialThread ? "p" : "q"}`)).json();
     api.initialGetThread = false;
     return res;
 }
