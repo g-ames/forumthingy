@@ -1,9 +1,13 @@
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const HTTPHASHES = window.crypto.subtle === undefined;
 let hashesReady = Promise.resolve();
 
 if (HTTPHASHES) {
     console.warn("WARNING: HTTP env: including httphashes.js! Please run under HTTPS under prod env!");
-    
+
     hashesReady = new Promise((resolve, reject) => {
         const script = document.createElement("script");
         script.src = "/httphashes.js";
@@ -48,7 +52,7 @@ function localDT(createdAt) {
 
 var api = {};
 
-api.newUser = async function(username, password) {
+api.newUser = async function (username, password) {
     return await (await fetch(`/api/users/new`, {
         method: "POST",
         headers: {
@@ -58,7 +62,7 @@ api.newUser = async function(username, password) {
     })).text();
 }
 
-api.newThread = async function(title, content) {
+api.newThread = async function (title, content) {
     return await (await fetch(`/api/thread/new`, {
         method: "POST",
         headers: {
@@ -68,7 +72,7 @@ api.newThread = async function(title, content) {
     })).text();
 }
 
-api.authenticate = async function(username, password) {
+api.authenticate = async function (username, password) {
     return await (await fetch(`/api/users/authenticate`, {
         method: "POST",
         headers: {
@@ -78,22 +82,37 @@ api.authenticate = async function(username, password) {
     })).text();
 }
 
-api.about = async function(username) {
+api.about = async function (username) {
     return await (await fetch(`/api/users/about?username=${username}`)).json();
 }
 
-api.getLatestThreads = async function() {
+api.getLatestThreads = async function () {
     return await (await fetch(`/api/threads/latest`)).json();
 }
 
-api.getInitialThread = true;
-api.getThread = async function(id) {
-    let res = await (await fetch(`/api/thread?id=${id}&init=${api.getInitialThread ? "p" : "q"}`)).json();
-    api.initialGetThread = false;
-    return res;
+api.initialGetThread = true;
+api.gettingThread = false;
+api.getThread = async function (id, failTimeout) {
+    if(api.gettingThread) { 
+        return;
+    }
+    api.gettingThread = true;
+
+    try {
+        let res = await (await fetch(`/api/thread?id=${id}&init=${api.initialGetThread ? "p" : "q"}`)).json();
+        api.initialGetThread = false;
+        api.gettingThread = false;
+        console.log(res);
+        return res;
+    } catch (e) {
+        failTimeout = failTimeout == undefined ? 500 : failTimeout; 
+        await delay(failTimeout);
+        api.gettingThread = false;
+        return api.getThread(id, failTimeout * 2);
+    }
 }
 
-api.tokenValid = async function(username, token) {
+api.tokenValid = async function (username, token) {
     return await (await fetch(`/api/token/valid`, {
         method: "POST",
         headers: {
@@ -104,7 +123,7 @@ api.tokenValid = async function(username, token) {
 }
 
 api.commentItalicizedSuffix = "";
-api.newComment = async function(text, thread) {
+api.newComment = async function (text, thread) {
     italicized = api.commentItalicizedSuffix;
     if (italicized == undefined) {
         italicized = "";
@@ -158,7 +177,7 @@ if (sessionStorage.getItem("username") != null) {
     controller.appendChild(aboutMe);
 }
 
-api.replyCallback = async function() {};
+api.replyCallback = async function () { };
 function createCommentFrag(comments, asQuotes) {
     if (asQuotes == undefined) {
         asQuotes = false;
@@ -202,7 +221,7 @@ function createCommentFrag(comments, asQuotes) {
 
         let commentReply = document.createElement("button");
         commentReply.innerText = "⮪";
-        commentReply.onclick = function() {
+        commentReply.onclick = function () {
             api.commentItalicizedSuffix = ` | @${element['User'].username} ${element.text.slice(0, 30)} ⮯`;
             api.replyCallback(api.commentItalicizedSuffix);
         }
@@ -214,7 +233,7 @@ function createCommentFrag(comments, asQuotes) {
     return frag;
 }
 
-api.setPfp = async function(file) {
+api.setPfp = async function (file) {
     await checkValid();
 
     const formData = new FormData();
