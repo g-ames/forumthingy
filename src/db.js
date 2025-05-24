@@ -55,5 +55,5 @@ module.exports = async function () {
 
     await sequelize.sync();
 
-    return { Thread, Comment, User };
+    return { Thread, Comment, User, sequelize };
 }

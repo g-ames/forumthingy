@@ -1,3 +1,28 @@
+const originalFetch = window.fetch;
+
+fetch = async function (...args) {
+    const response = await originalFetch(...args);
+
+    const clonedResponse = response.clone();
+    const sessionHeader = clonedResponse.headers.get('X-Server-Session');
+
+    if (sessionHeader !== null) {
+        const currentSession = sessionStorage.getItem('X-Server-Session');
+
+        if (currentSession && currentSession !== sessionHeader) {
+            sessionStorage.clear();
+            window.location.href = '/signin';
+            return; 
+        }
+
+        if (!currentSession) {
+            sessionStorage.setItem('X-Server-Session', sessionHeader);
+        }
+    }
+
+    return response;
+};
+
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -93,7 +118,7 @@ api.getLatestThreads = async function () {
 api.initialGetThread = true;
 api.gettingThread = false;
 api.getThread = async function (id, failTimeout) {
-    if(api.gettingThread) { 
+    if (api.gettingThread) {
         return;
     }
     api.gettingThread = true;
@@ -105,7 +130,7 @@ api.getThread = async function (id, failTimeout) {
         console.log(res);
         return res;
     } catch (e) {
-        failTimeout = failTimeout == undefined ? 500 : failTimeout; 
+        failTimeout = failTimeout == undefined ? 500 : failTimeout;
         await delay(failTimeout);
         api.gettingThread = false;
         return api.getThread(id, failTimeout * 2);
@@ -248,3 +273,22 @@ api.setPfp = async function (file) {
 
     return await res.json();
 };
+
+api.dropDatabase = async function () {
+    // theres a server check as well goofy ass mf
+    if (sessionStorage.getItem("username") != "ADMIN") {
+        return;
+    }
+
+    await checkValid();
+    return await (await fetch(`/api/admin/db/remove/all`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: sessionStorage.getItem("username"),
+            token: sessionStorage.getItem("token")
+        })
+    })).text();
+}

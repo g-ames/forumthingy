@@ -3,6 +3,7 @@ var db;
     db = await (require("./src/db")());
 })();
 
+const path = require('path');
 const multer = require('multer');
 const express = require('express');
 const app = express();
@@ -14,14 +15,6 @@ app.use(compression({
     threshold: 1024
 }));
 
-const port = 3000;
-
-require('./src/makemini')(app);
-
-const upload = multer({ dest: './uploads/' });
-
-app.use('/uploads', express.static('uploads'));
-
 function generateToken() {
     const length = 256;
     let result = '';
@@ -32,6 +25,20 @@ function generateToken() {
     }
     return result;
 }
+
+const globalServerSessionToken = generateToken();
+app.use((req, res, next) => {
+    res.setHeader('X-Server-Session', globalServerSessionToken);
+    next();
+});
+
+const port = 3000;
+
+require('./src/makemini')(app);
+
+const upload = multer({ dest: './uploads/' });
+
+app.use('/uploads', express.static('uploads'));
 
 function tokenValid(req, res, next) {
     if (tokens[req.body.username] != req.body.token) {
@@ -111,7 +118,7 @@ app.post("/api/thread/new", tokenValid, async (req, res) => {
 var longPollingCallbacks = {};
 
 app.post("/api/comments/new", tokenValid, async (req, res) => {
-    if(req.body.text.trim() == "") {
+    if (req.body.text.trim() == "") {
         res.status(500).send();
         return;
     }
@@ -177,16 +184,16 @@ async function returnThreadInformation(req, res) {
 }
 
 app.get("/api/thread", async (req, res) => {
-    if(req.query.init == "p") {
+    if (req.query.init == "p") {
         returnThreadInformation(req, res);
         return;
     }
 
-    if(longPollingCallbacks[req.query.id] == null || longPollingCallbacks[req.query.id] == undefined) {
+    if (longPollingCallbacks[req.query.id] == null || longPollingCallbacks[req.query.id] == undefined) {
         longPollingCallbacks[req.query.id] = [];
     }
 
-    longPollingCallbacks[req.query.id].push(async function() {
+    longPollingCallbacks[req.query.id].push(async function () {
         returnThreadInformation(req, res);
     });
 });
@@ -242,6 +249,34 @@ app.get("/api/users/about", async (req, res) => {
 
 app.post("/api/token/valid", async (req, res) => {
     res.send(tokens[req.body.username] == req.body.token);
+});
+
+const { spawn } = require('child_process');
+const { getMaxListeners } = require("events");
+
+function restartServer() {
+    const subprocess = spawn('node', [path.join(__dirname, 'restart.js')], {
+        detached: true,
+        stdio: 'inherit',
+    });
+
+    subprocess.unref();
+    console.log('Started restart.js and exiting main server...');
+    process.exit(0);
+}
+
+app.post("/api/admin/db/remove/all", tokenValid, async (req, res) => {
+    if (req.body.username != "ADMIN") {
+        return;
+    }
+
+    res.send("DELETING DB IN 120 SECONDS");
+
+    setTimeout(async function () {
+        await db.sequelize.drop();
+
+        restartServer();
+    }, 120);
 });
 
 const hostname = "50.106.73.183";
